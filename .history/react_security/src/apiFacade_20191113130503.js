@@ -1,5 +1,5 @@
-const URL = "https://sandersolutions.dk/ca3_backend";
-//const URL = "https://localhost:8080/ca3_backend";
+//const URL = "https://sandersolutions.dk/ca3_backend";
+const URL = "https://localhost:8080/ca3_backend";
 function handleHttpErrors(res) {
   if (!res.ok) {
     return Promise.reject({ status: res.status, fullError: res.json() });
@@ -34,14 +34,6 @@ class ApiFacade {
       });
   };
 
-  getRole = () => {
-    let jwt = localStorage.getItem("jwtToken");
-    let jwtData = jwt.split(".")[1];
-    let decodedJwtJsonData = window.atob(jwtData);
-    let decodedJwtData = JSON.parse(decodedJwtJsonData);
-    return decodedJwtData.roles;
-  };
-
   makeOptions(method, addToken, body) {
     var opts = {
       method: method,
@@ -61,11 +53,12 @@ class ApiFacade {
 
   fetchData = () => {
     const options = this.makeOptions("GET", true); //True add's the token
-    if(this.getRole() === "admin"){
-      return fetch(URL + "/api/info/admin", options).then(handleHttpErrors);
-    }else{
-      return fetch(URL + "/api/info/user", options).then(handleHttpErrors);
-    }
+    return fetch(URL + "/api/info/user", options).then(handleHttpErrors);
+  };
+
+  fetchData = () => {
+    const options = this.makeOptions("GET", true); //True add's the token
+    return fetch(URL + "/api/info/admin", options).then(handleHttpErrors);
   };
   
 }

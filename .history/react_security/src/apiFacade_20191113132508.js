@@ -34,14 +34,6 @@ class ApiFacade {
       });
   };
 
-  getRole = () => {
-    let jwt = localStorage.getItem("jwtToken");
-    let jwtData = jwt.split(".")[1];
-    let decodedJwtJsonData = window.atob(jwtData);
-    let decodedJwtData = JSON.parse(decodedJwtJsonData);
-    return decodedJwtData.roles;
-  };
-
   makeOptions(method, addToken, body) {
     var opts = {
       method: method,
@@ -61,12 +53,9 @@ class ApiFacade {
 
   fetchData = () => {
     const options = this.makeOptions("GET", true); //True add's the token
-    if(this.getRole() === "admin"){
-      return fetch(URL + "/api/info/admin", options).then(handleHttpErrors);
-    }else{
-      return fetch(URL + "/api/info/user", options).then(handleHttpErrors);
-    }
+    return fetch(URL + "/api/info/user", options).then(handleHttpErrors);
   };
+
   
 }
 const facade = new ApiFacade();
