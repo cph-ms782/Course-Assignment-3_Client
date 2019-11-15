@@ -16,7 +16,9 @@ class ApiFacade {
     return localStorage.getItem("jwtToken");
   };
   loggedIn = () => {
+    console.log("loggedIn func");
     const loggedIn = this.getToken() != null;
+    console.log("loggedIn", loggedIn);
     return loggedIn;
   };
   logout = () => {
@@ -59,23 +61,10 @@ class ApiFacade {
     return opts;
   }
 
-  // makeOptionsCORS(addToken) {
-  //   var opts = {
-  //     method: "OPTIONS",
-  //     headers: {
-  //       "Access-Control-Allow-Origin": URL,
-  //       'Access-Control-Expose-Headers': "Content-Length"
-  //     }
-  //   };
-  //   if (addToken && this.loggedIn()) {
-  //     opts.headers["x-access-token"] = this.getToken();
-  //   }
-  //   return opts;
-  // }
-
   fetchSW = () => {
+    console.log("fetchSW");
     const options = this.makeOptions("GET", true); //True add's the token
-    return fetch(URL + "/api/sw/data", options).then(handleHttpErrors);
+    return fetch(URL + "/api/sw/datadto", options).then(handleHttpErrors);
   }
 
   fetchData = () => {

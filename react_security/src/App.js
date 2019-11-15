@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useState, useEffect } from "react";
 import {
   BrowserRouter as Router,
   Route,
@@ -11,9 +11,10 @@ import {
   useRouteMatch
 } from "react-router-dom";
 import facade from "./apiFacade";
+import uuid from "uuid/v1";
 import funcFacade from "./funcApiFacade";
 
-function App({ facade }) {
+function App() {
   console.log("App");
   return (
     <div>
@@ -54,26 +55,31 @@ function Home() {
   )
 }
 
-const swData = () => {
-  const getData = async () => {
-    console.log("getData");
-    try {
-      return await facade.fetchSW();
-    } catch (e) {
-      console.log("err", e);
-    }
-    return "";
-  }
-  return getData();
-}
-
 function Data() {
   console.log("Data");
-  const data = swData().then(res => res);
-  console.log("data", data)
+  const [starwars, setStarwars] = useState([]);
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const data = await facade.fetchSW();
+        console.log("data", data);
+        setStarwars(data);
+      } catch (e) {
+        console.log("err", e);
+      }
+    }
+    getData();
+  }, []);
+
+  console.log("starwars", starwars);
   return (
     <div>
-      {data.name}
+      <ul key={uuid()}>
+        {starwars.map((data) =>
+          <li key={uuid()}>Name: {data.name} &emsp;&emsp;&emsp;&emsp;  URL: {data.url} </li>
+        )}
+      </ul>
     </div >
   )
 }
