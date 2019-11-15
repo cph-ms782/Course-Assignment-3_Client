@@ -1,5 +1,4 @@
-const URL = "https://sandersolutions.dk/ca3_backend";
-//const URL = "https://localhost:8080/ca3_backend";
+import URL from "./settings"
 function handleHttpErrors(res) {
   if (!res.ok) {
     return Promise.reject({ status: res.status, fullError: res.json() });
@@ -62,6 +61,7 @@ class ApiFacade {
   fetchData = () => {
     const options = this.makeOptions("GET", true); //True add's the token
     if(this.getRole() === "admin"){
+
       return fetch(URL + "/api/info/admin", options).then(handleHttpErrors);
     }else{
       return fetch(URL + "/api/info/user", options).then(handleHttpErrors);
