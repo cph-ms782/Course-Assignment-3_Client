@@ -1,5 +1,92 @@
 import React, { Component } from "react";
+import {
+  BrowserRouter as Router,
+  Route,
+  NavLink,
+  Link,
+  Prompt,
+  Switch,
+  useParams,
+  useHistory,
+  useRouteMatch
+} from "react-router-dom";
 import facade from "./apiFacade";
+import funcFacade from "./funcApiFacade";
+
+function App({ facade }) {
+  console.log("App");
+  return (
+    <div>
+      <Router >
+        <div>
+          <Header />
+          <Switch>
+            <Route exact path="/"><Home /></Route>
+            <Route path="/data"><Data /></Route>
+            <Route path="/log"><AppLogin /></Route>
+            <Route component={NoMatch} />
+          </Switch>
+        </div>
+      </Router>
+    </div>
+  );
+}
+
+function Header() {
+  console.log("Header");
+  return (
+    <div>
+      <ul className="header">
+        <li><NavLink exact activeClassName="active" to="/">Home</NavLink></li>
+        <li><NavLink activeClassName="active" to="/data">Data</NavLink></li>
+        <li><NavLink activeClassName="active" to="/log">User</NavLink></li>
+      </ul>
+    </div>
+  )
+}
+
+function Home() {
+  console.log("Home");
+  return (
+    <div>
+      hello Home
+      </div>
+  )
+}
+
+const swData = () => {
+  const getData = async () => {
+    console.log("getData");
+    try {
+      return await facade.fetchSW();
+    } catch (e) {
+      console.log("err", e);
+    }
+    return "";
+  }
+  return getData();
+}
+
+function Data() {
+  console.log("Data");
+  const data = swData().then(res => res);
+  console.log("data", data)
+  return (
+    <div>
+      {data.name}
+    </div >
+  )
+}
+
+function NoMatch() {
+  console.log("NoMatch");
+  return (
+    <div>
+      hello NoMatch
+    </div>
+  )
+}
+
 
 class LogIn extends Component {
   constructor(props) {
@@ -32,7 +119,7 @@ class LoggedIn extends Component {
     this.state = { dataFromServer: "Fetching!!" };
   }
   componentDidMount = () => {
-    facade.fetchData().then(res=> this.setState({dataFromServer: res.msg}));
+    facade.fetchData().then(res => this.setState({ dataFromServer: res.msg }));
   }
   render() {
     return (
@@ -43,7 +130,7 @@ class LoggedIn extends Component {
     );
   }
 }
-class App extends Component {
+class AppLogin extends Component {
   constructor(props) {
     super(props);
     this.state = { loggedIn: false };
@@ -61,11 +148,11 @@ class App extends Component {
         {!this.state.loggedIn ? (
           <LogIn login={this.login} />
         ) : (
-          <div>
-            <LoggedIn />
-            <button onClick={this.logout}>Logout</button>
-          </div>
-        )}
+            <div>
+              <LoggedIn />
+              <button onClick={this.logout}>Logout</button>
+            </div>
+          )}
       </div>
     );
   }

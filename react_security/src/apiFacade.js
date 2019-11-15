@@ -1,4 +1,5 @@
-import URL from "./settings"
+import URL from "./settings";
+
 function handleHttpErrors(res) {
   if (!res.ok) {
     return Promise.reject({ status: res.status, fullError: res.json() });
@@ -58,16 +59,34 @@ class ApiFacade {
     return opts;
   }
 
+  // makeOptionsCORS(addToken) {
+  //   var opts = {
+  //     method: "OPTIONS",
+  //     headers: {
+  //       "Access-Control-Allow-Origin": URL,
+  //       'Access-Control-Expose-Headers': "Content-Length"
+  //     }
+  //   };
+  //   if (addToken && this.loggedIn()) {
+  //     opts.headers["x-access-token"] = this.getToken();
+  //   }
+  //   return opts;
+  // }
+
+  fetchSW = () => {
+    const options = this.makeOptions("GET", true); //True add's the token
+    return fetch(URL + "/api/sw/data", options).then(handleHttpErrors);
+  }
+
   fetchData = () => {
     const options = this.makeOptions("GET", true); //True add's the token
-    if(this.getRole() === "admin"){
-
+    if (this.getRole() === "admin") {
       return fetch(URL + "/api/info/admin", options).then(handleHttpErrors);
-    }else{
+    } else {
       return fetch(URL + "/api/info/user", options).then(handleHttpErrors);
     }
   };
-  
+
 }
 const facade = new ApiFacade();
 export default facade;
