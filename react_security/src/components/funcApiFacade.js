@@ -1,4 +1,4 @@
-import URL from "./settings";
+import URL from "../settings";
 
 //The two methods below, are the utility-methods introduced here (use them if you like):
 //https://docs.google.com/document/d/1hF9P65v_AJKCjol_gFkm3oZ1eVTuOKc15V6pcb3iFa8/edit?usp=sharing

@@ -17,7 +17,7 @@ function Data({ loggedIn }) {
                 } catch (e) {
                     console.log("err", e);
                 }
-            }
+            };
             getData();
         }
     }, []);
@@ -26,17 +26,23 @@ function Data({ loggedIn }) {
     if (loggedIn) {
         return (
             <div>
-                <ul key={uuid()}>
-                    {starwars.map((data) =>
-                        <li key={uuid()}>Name: {data.name} &emsp;&emsp;&emsp;&emsp;  URL: {data.url} </li>
-                    )}
-                </ul>
+                <table>
+                    <thead><tr><td><b>Name</b></td><td><b>URL</b></td></tr></thead>
+                    <tbody>
+                        {starwars.map((data) => (
+                            <tr key={uuid()}>
+                                <td>{data.name}</td>
+                                <td>{data.url}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
             </div >
         )
     } else {
         return (
             <div>
-                <h2> please login</h2>
+                <h2> Please login</h2>
             </div >
         )
     }
