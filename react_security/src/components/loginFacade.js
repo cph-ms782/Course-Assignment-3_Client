@@ -1,4 +1,4 @@
-import URL from "./settings";
+import URL from "../settings";
 
 function handleHttpErrors(res) {
   if (!res.ok) {
@@ -7,8 +7,7 @@ function handleHttpErrors(res) {
   return res.json();
 }
 
-class ApiFacade {
-  //Insert utility-methods from a latter step (d) here
+class LoginFacade {
   setToken = token => {
     localStorage.setItem("jwtToken", token);
   };
@@ -16,6 +15,7 @@ class ApiFacade {
     return localStorage.getItem("jwtToken");
   };
   loggedIn = () => {
+    console.log("loggedIn func");
     const loggedIn = this.getToken() != null;
     return loggedIn;
   };
@@ -23,6 +23,7 @@ class ApiFacade {
     localStorage.removeItem("jwtToken");
   };
   login = (user, pass) => {
+    console.log("user, pass", user, pass)
     const options = this.makeOptions("POST", true, {
       username: user,
       password: pass
@@ -31,7 +32,8 @@ class ApiFacade {
       .then(handleHttpErrors)
       .then(res => {
         this.setToken(res.token);
-      });
+      })
+      .catch(err => { throw err });
   };
 
   getRole = () => {
@@ -43,6 +45,7 @@ class ApiFacade {
   };
 
   makeOptions(method, addToken, body) {
+    console.log("makeOptions");
     var opts = {
       method: method,
       headers: {
@@ -56,29 +59,18 @@ class ApiFacade {
     if (body) {
       opts.body = JSON.stringify(body);
     }
+    console.log("opts", opts);
     return opts;
   }
 
-  // makeOptionsCORS(addToken) {
-  //   var opts = {
-  //     method: "OPTIONS",
-  //     headers: {
-  //       "Access-Control-Allow-Origin": URL,
-  //       'Access-Control-Expose-Headers': "Content-Length"
-  //     }
-  //   };
-  //   if (addToken && this.loggedIn()) {
-  //     opts.headers["x-access-token"] = this.getToken();
-  //   }
-  //   return opts;
-  // }
-
   fetchSW = () => {
+    console.log("fetchSW");
     const options = this.makeOptions("GET", true); //True add's the token
-    return fetch(URL + "/api/sw/data", options).then(handleHttpErrors);
+    return fetch(URL + "/api/sw/datadto", options).then(handleHttpErrors);
   }
 
   fetchData = () => {
+    console.log("fetchData");
     const options = this.makeOptions("GET", true); //True add's the token
     if (this.getRole() === "admin") {
       return fetch(URL + "/api/info/admin", options).then(handleHttpErrors);
@@ -88,5 +80,5 @@ class ApiFacade {
   };
 
 }
-const facade = new ApiFacade();
+const facade = new LoginFacade();
 export default facade;
