@@ -1,4 +1,4 @@
-import URL from "./settings";
+import URL from "../settings";
 
 function handleHttpErrors(res) {
   if (!res.ok) {
@@ -7,8 +7,7 @@ function handleHttpErrors(res) {
   return res.json();
 }
 
-class ApiFacade {
-  //Insert utility-methods from a latter step (d) here
+class LoginFacade {
   setToken = token => {
     localStorage.setItem("jwtToken", token);
   };
@@ -18,13 +17,13 @@ class ApiFacade {
   loggedIn = () => {
     console.log("loggedIn func");
     const loggedIn = this.getToken() != null;
-    console.log("loggedIn", loggedIn);
     return loggedIn;
   };
   logout = () => {
     localStorage.removeItem("jwtToken");
   };
   login = (user, pass) => {
+    console.log("user, pass", user, pass)
     const options = this.makeOptions("POST", true, {
       username: user,
       password: pass
@@ -33,7 +32,8 @@ class ApiFacade {
       .then(handleHttpErrors)
       .then(res => {
         this.setToken(res.token);
-      });
+      })
+      .catch(err => { throw err });
   };
 
   getRole = () => {
@@ -45,6 +45,7 @@ class ApiFacade {
   };
 
   makeOptions(method, addToken, body) {
+    console.log("makeOptions");
     var opts = {
       method: method,
       headers: {
@@ -58,6 +59,7 @@ class ApiFacade {
     if (body) {
       opts.body = JSON.stringify(body);
     }
+    console.log("opts", opts);
     return opts;
   }
 
@@ -68,6 +70,7 @@ class ApiFacade {
   }
 
   fetchData = () => {
+    console.log("fetchData");
     const options = this.makeOptions("GET", true); //True add's the token
     if (this.getRole() === "admin") {
       return fetch(URL + "/api/info/admin", options).then(handleHttpErrors);
@@ -77,5 +80,5 @@ class ApiFacade {
   };
 
 }
-const facade = new ApiFacade();
+const facade = new LoginFacade();
 export default facade;
