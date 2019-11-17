@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { Component, useState, useEffect } from "react";
 import {
   BrowserRouter as Router,
   Route,
@@ -11,9 +11,10 @@ import {
   useRouteMatch
 } from "react-router-dom";
 import facade from "./apiFacade";
+import uuid from "uuid/v1";
 import funcFacade from "./funcApiFacade";
 
-function App({ facade }) {
+function App() {
   console.log("App");
   return (
     <div>
@@ -56,39 +57,31 @@ function Home() {
 
 function Data() {
   console.log("Data");
-  var promise;
-  const getData = async (promise) => {
-    console.log("getData");
-    try {
-      promise = await facade.fetchSW();
-      console.log("promise1", promise);
-    } catch (e) {
-      console.log("err", e);
+  const [starwars, setStarwars] = useState([]);
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const data = await facade.fetchSW();
+        console.log("data", data);
+        setStarwars(data);
+      } catch (e) {
+        console.log("err", e);
+      }
     }
-    return (
-      <div>
+    getData();
+  }, []);
 
-        <table className="table">
-          <tbody>
-            {promise.map((dat) =>
-              <tr key={dat.id}>
-                <td>{dat.name}</td>
-                <td>{dat.url}</td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-
-
-        {promise.map((dat) => (
-          <li key={dat.name}>{dat.name} {dat.url}</li>
-        ))
-        }
-      </div >
-    )
-  }
-  console.log("promise2", promise);
-  getData();
+  console.log("starwars", starwars);
+  return (
+    <div>
+      <ul key={uuid()}>
+        {starwars.map((data) =>
+          <li key={uuid()}>Name: {data.name} &emsp;&emsp;&emsp;&emsp;  URL: {data.url} </li>
+        )}
+      </ul>
+    </div >
+  )
 }
 
 function NoMatch() {
