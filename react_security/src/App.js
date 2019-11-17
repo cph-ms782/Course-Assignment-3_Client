@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import {
   BrowserRouter as Router,
   Route,
@@ -54,28 +54,41 @@ function Home() {
   )
 }
 
-const swData = () => {
-  const getData = async () => {
+function Data() {
+  console.log("Data");
+  var promise;
+  const getData = async (promise) => {
     console.log("getData");
     try {
-      return await facade.fetchSW();
+      promise = await facade.fetchSW();
+      console.log("promise1", promise);
     } catch (e) {
       console.log("err", e);
     }
-    return "";
-  }
-  return getData();
-}
+    return (
+      <div>
 
-function Data() {
-  console.log("Data");
-  const data = swData().then(res => res);
-  console.log("data", data)
-  return (
-    <div>
-      {data.name}
-    </div >
-  )
+        <table className="table">
+          <tbody>
+            {promise.map((dat) =>
+              <tr key={dat.id}>
+                <td>{dat.name}</td>
+                <td>{dat.url}</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+
+
+        {promise.map((dat) => (
+          <li key={dat.name}>{dat.name} {dat.url}</li>
+        ))
+        }
+      </div >
+    )
+  }
+  console.log("promise2", promise);
+  getData();
 }
 
 function NoMatch() {
